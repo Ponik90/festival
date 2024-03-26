@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../utilitis/global_details.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -43,114 +46,144 @@ class _PersonalScreenState extends State<PersonalScreen> {
               ),
               child: Form(
                 key: formkey,
-                child: Column(
-                  children: [
-                    const Stack(
-                      alignment: Alignment.bottomRight,
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: [
-                        CircleAvatar(
-                          maxRadius: 50,
+                         Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            path.isEmpty?
+                            const CircleAvatar(
+                              maxRadius: 50,
+                              child: Icon(Icons.perm_identity,size: 50,),
+                            ):
+                            CircleAvatar(
+                              maxRadius: 50,
+                              backgroundImage: FileImage(File("${path}"),),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                ImagePicker picker = ImagePicker();
+                                XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                                setState(() {
+                                  path=image!.path;
+                                  g1.image=image.path;
+                                });
+                              },
+                              child: const CircleAvatar(
+                                maxRadius: 15,
+                                backgroundColor: Colors.blueAccent,
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                              icon: Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                              hintText: "Name",
+                              hintStyle: TextStyle(color: Colors.grey)),
+                          validator: (value) {
+                            if (value!.isEmpty || value == null) {
+                              return "This field is require";
+                            }
+                          },
+                          controller: txtname,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                              icon: Icon(
+                                Icons.call,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                              hintText: "phone",
+                              hintStyle: TextStyle(color: Colors.grey)),
+                          validator: (value) {
+                            if (value!.isEmpty || value == null) {
+                              return "This field is require";
+                            } else if (value.length != 10) {
+                              return "please enter the 10 digit";
+                            }
+                          },
+                          controller: txtphone,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          maxLines: 3,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.done,
+                          decoration: const InputDecoration(
+                              icon: Icon(
+                                Icons.email,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                              hintText: "email",
+                              hintStyle: TextStyle(color: Colors.grey)),
+                          validator: (value) {
+                            if (value!.isEmpty || value == null) {
+                              return "This field is require";
+                            } else if (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value)) {
+                              return "enter the valid email";
+                            }
+                          },
+                          controller: txtemail,
+                        ),
+                        const SizedBox(
+                          height: 30,
                         ),
                         InkWell(
-                          child: CircleAvatar(
-                            maxRadius: 15,
-                            backgroundColor: Colors.blueAccent,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 20,
+                          onTap: () {
+
+                            if(formkey.currentState!.validate())
+                              {
+                                g1.name=txtname.text;
+                                g1.phone=txtphone.text;
+                                g1.email=txtemail.text;
+                                formkey.currentState!.save();
+                              }
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 80,
+                            color: Colors.blueAccent,
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "SAVE",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
+                        )
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                          icon: Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          hintText: "Name",
-                          hintStyle: TextStyle(color: Colors.grey)),
-                      validator: (value) {
-                        if (value!.isEmpty || value == null) {
-                          return "This field is require";
-                        }
-                      },
-                      controller: txtname,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                          icon: Icon(
-                            Icons.call,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          hintText: "phone",
-                          hintStyle: TextStyle(color: Colors.grey)),
-                      validator: (value) {
-                        if (value!.isEmpty || value == null) {
-                          return "This field is require";
-                        } else if (value.length != 10) {
-                          return "please enter the 10 digit";
-                        }
-                      },
-                      controller: txtphone,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      maxLines: 3,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
-                          icon: Icon(
-                            Icons.email,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          hintText: "email",
-                          hintStyle: TextStyle(color: Colors.grey)),
-                      validator: (value) {
-                        if (value!.isEmpty || value == null) {
-                          return "This field is require";
-                        } else if (!RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value)) {
-                          return "enter the valid email";
-                        }
-                      },
-                      controller: txtemail,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 80,
-                      color: Colors.blueAccent,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "SAVE",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
               ),
             ),

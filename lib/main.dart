@@ -11,6 +11,7 @@ void main() {
   );
   runApp(
     MaterialApp(
+      theme: ThemeData(fontFamily: "edu"),
       debugShowCheckedModeBanner: false,
       routes: screen,
     ),
