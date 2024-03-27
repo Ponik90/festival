@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'package:festival/model/festival_wishes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
-
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EditPostScreen extends StatefulWidget {
   const EditPostScreen({super.key});
@@ -16,11 +18,19 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   List<Color> changecolor = [Colors.black, Colors.white, ...Colors.primaries];
   List<Color> changebg = [Colors.black, Colors.white, ...Colors.accents];
+  List<String> changeimage = [
+    "assets/bgimage/holi1.jpg",
+    "assets/bgimage/holi2.jpg",
+    "assets/bgimage/holi3.jpg",
+    "assets/bgimage/holi4.jpg",
+  ];
+  String image = "";
   Color textcolor = Colors.black;
   Color bgcolor = Colors.amberAccent;
   Color bordercolor = Colors.black;
   bool istext = true;
-  GlobalKey repaintkey= GlobalKey();
+  GlobalKey repaintkey = GlobalKey();
+  bool isimage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +50,12 @@ class _EditPostScreenState extends State<EditPostScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              RenderRepaintBoundary boundry = repaintkey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-              ui.Image image= await boundry.toImage();
-              ByteData? bytedata = await image.toByteData(format: ui.ImageByteFormat.png);
-              Uint8List data =bytedata!.buffer.asUint8List();
+              RenderRepaintBoundary boundry = repaintkey.currentContext!
+                  .findRenderObject() as RenderRepaintBoundary;
+              ui.Image image = await boundry.toImage();
+              ByteData? bytedata =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
+              Uint8List data = bytedata!.buffer.asUint8List();
 
               await ImageGallerySaver.saveImage(data);
             },
@@ -53,7 +65,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              RenderRepaintBoundary boundry = repaintkey.currentContext!
+                  .findRenderObject() as RenderRepaintBoundary;
+              ui.Image image = await boundry.toImage();
+              ByteData? bytedata =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
+              Uint8List data = bytedata!.buffer.asUint8List();
+
+              await ImageGallerySaver.saveImage(data);
+
+              Directory dir = await getTemporaryDirectory();
+
+              await Share.shareXFiles([XFile(dir.path)]);
+            },
             icon: const Icon(
               Icons.share,
               color: Colors.white,
@@ -87,11 +112,27 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 ),
               ),
               alignment: Alignment.center,
-              child: SelectableText(
-                "${data.wishes}",
-                style: TextStyle(
-                  color: textcolor,
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Visibility(
+                    visible: isimage,
+                    child: Image.asset(
+                      image,
+                      fit: BoxFit.fill,
+                      height: MediaQuery.sizeOf(context).width,
+                      width: MediaQuery.sizeOf(context).width,
+                    ),
+                  ),
+                  SelectableText(
+                    "${data.wishes}",
+                    style: TextStyle(
+                      color: textcolor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -167,74 +208,116 @@ class _EditPostScreenState extends State<EditPostScreen> {
           //background
           Visibility(
             visible: !istext,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      itemCount: changebg.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            setState(
-                              () {
-                                bgcolor = changebg[index];
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemCount: changebg.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    isimage=false;
+                                    bgcolor = changebg[index];
+                                  },
+                                );
                               },
+                              child: Container(
+                                width: 50,
+                                margin: const EdgeInsets.only(
+                                  right: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: changebg[index],
+                                  border: Border.all(
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
                             );
                           },
-                          child: Container(
-                            width: 50,
-                            margin: const EdgeInsets.only(
-                              right: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: changebg[index],
-                              border: Border.all(
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      itemCount: changebg.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            setState(
-                              () {
-                                bordercolor = changebg[index];
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemCount: changebg.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    bordercolor = changebg[index];
+                                  },
+                                );
                               },
+                              child: Container(
+                                width: 50,
+                                margin: const EdgeInsets.only(
+                                  right: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: changebg[index],
+                                  border: Border.all(
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
                             );
                           },
-                          child: Container(
-                            width: 50,
-                            margin: const EdgeInsets.only(
-                              right: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: changebg[index],
-                              border: Border.all(
-                                width: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 80,
+                        child: ListView.builder(
+                          itemCount: changeimage.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    isimage=true;
+                                    image = changeimage[index];
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: 80,
+                                margin: const EdgeInsets.only(
+                                  right: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  changeimage[index],
+                                  fit: BoxFit.fill,
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

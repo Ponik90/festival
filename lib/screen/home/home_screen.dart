@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Image.asset("${g1.festivalname[index]['image']}",height: 150,fit: BoxFit.fill,),
-                  Spacer(),
+                  const Spacer(),
                   Text("${g1.festivalname[index]['festival']}",overflow: TextOverflow.ellipsis,style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,),),
                 ],
               )
