@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:festival/model/festival_wishes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,8 @@ import 'dart:ui' as ui;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../utilitis/global_details.dart';
 
 class EditPostScreen extends StatefulWidget {
   const EditPostScreen({super.key});
@@ -18,13 +19,8 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   List<Color> changecolor = [Colors.black, Colors.white, ...Colors.primaries];
   List<Color> changebg = [Colors.black, Colors.white, ...Colors.accents];
-  List<String> changeimage = [
-    "assets/bgimage/holi1.jpg",
-    "assets/bgimage/holi2.jpg",
-    "assets/bgimage/holi3.jpg",
-    "assets/bgimage/holi4.jpg",
-  ];
-  String image = "";
+
+  String image = "assets/bgimage/holi1.jpg";
   Color textcolor = Colors.black;
   Color bgcolor = Colors.amberAccent;
   Color bordercolor = Colors.black;
@@ -34,7 +30,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    MaptoModel data = ModalRoute.of(context)!.settings.arguments as MaptoModel;
+    List data = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff6639B8),
@@ -73,11 +69,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   await image.toByteData(format: ui.ImageByteFormat.png);
               Uint8List data = bytedata!.buffer.asUint8List();
 
-              await ImageGallerySaver.saveImage(data);
-
               Directory dir = await getTemporaryDirectory();
-
-              await Share.shareXFiles([XFile(dir.path)]);
+              File f1 = await File("${dir.path}/image.jpg").writeAsBytes(data);
+              await ImageGallerySaver.saveFile(f1.path);
+              await Share.shareXFiles([XFile(f1.path)]);
             },
             icon: const Icon(
               Icons.share,
@@ -87,7 +82,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
           IconButton(
             onPressed: () async {
               await Clipboard.setData(
-                ClipboardData(text: "${data.wishes}"),
+                ClipboardData(text: "${data[0]['wishes']}"),
               );
             },
             icon: const Icon(
@@ -124,13 +119,21 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       width: MediaQuery.sizeOf(context).width,
                     ),
                   ),
+
                   SelectableText(
-                    "${data.wishes}",
+                    "${data[0]['wishes']}",
                     style: TextStyle(
                       color: textcolor,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+
+                      Text("${g1.name}")
+                    ],
                   ),
                 ],
               ),
@@ -174,34 +177,49 @@ class _EditPostScreenState extends State<EditPostScreen> {
           //text
           Visibility(
             visible: istext,
-            child: SizedBox(
-              height: 50,
-              child: ListView.builder(
-                itemCount: changecolor.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      setState(
-                        () {
-                          textcolor = changecolor[index];
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 50,
-                      margin: const EdgeInsets.only(
-                        right: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: changecolor[index],
-                        border: Border.all(
-                          width: 2,
-                        ),
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Change Text Color ",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                      itemCount: changecolor.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            setState(
+                              () {
+                                textcolor = changecolor[index];
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 50,
+                            margin: const EdgeInsets.only(
+                              right: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: changecolor[index],
+                              border: Border.all(
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
           ),
@@ -213,7 +231,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                        "Change Background Color ",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
                         height: 50,
                         child: ListView.builder(
@@ -224,7 +251,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                               onTap: () {
                                 setState(
                                   () {
-                                    isimage=false;
+                                    isimage = false;
                                     bgcolor = changebg[index];
                                   },
                                 );
@@ -246,7 +273,15 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
+                      ),
+                      const Text(
+                        "Change Border Color ",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       SizedBox(
                         height: 50,
@@ -279,20 +314,29 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
+                      ),
+                      const Text(
+                        "Change Image Color ",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       SizedBox(
                         height: 80,
                         child: ListView.builder(
-                          itemCount: changeimage.length,
+                          itemCount: data[1].length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
                                 setState(
                                   () {
-                                    isimage=true;
-                                    image = changeimage[index];
+                                    isimage = true;
+                                    image = data[1][index];
                                   },
                                 );
                               },
@@ -307,7 +351,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                   ),
                                 ),
                                 child: Image.asset(
-                                  changeimage[index],
+                                  data[1][index],
                                   fit: BoxFit.fill,
                                 ),
                               ),

@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:festival/model/festival_wishes.dart';
 import 'package:flutter/material.dart';
 
 import '../../utilitis/global_details.dart';
@@ -13,6 +11,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List<List<String>> allinone=[
+    g1.holimage,
+    g1.dussehraimage,
+    g1.rakhsaimage,
+    g1.utrryanimage,
+    g1.diwaliimage,
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -66,24 +72,52 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisExtent: 220
         ),
 
-        itemCount: g1.festivalname.length,
+        itemCount: g1.festivaldetail.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Map m1 = g1.festivalname[index];
-              Navigator.pushNamed(context, 'post',arguments: m1);
+              if(index==0)
+                {
+                  Map m1 = g1.festivalname[index];
+                  Navigator.pushNamed(context, 'post',arguments: [m1,g1.holi,g1.holimage]);
+                }
+              else if (index == 1)
+                {
+                  Map m1 = g1.festivalname[index];
+                  Navigator.pushNamed(context, 'post',arguments: [m1,g1.dussehra,g1.dussehraimage]);
+                }
+              else if (index == 2)
+              {
+                Map m1 = g1.festivalname[index];
+                Navigator.pushNamed(context, 'post',arguments: [m1,g1.raksha,g1.rakhsaimage]);
+              }
+              else if (index == 3)
+              {
+                Map m1 = g1.festivalname[index];
+                Navigator.pushNamed(context, 'post',arguments: [m1,g1.uttarayan,g1.utrryanimage]);
+              }
+              else if (index == 4)
+              {
+                Map m1 = g1.festivalname[index];
+                Navigator.pushNamed(context, 'post',arguments: [m1,g1.diwali,g1.diwaliimage]);
+              }
+
+
             },
             child: Container(
 
               width: MediaQuery.sizeOf(context).width * 0.90,
-              color: Colors.red,
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color:  const Color(0xff7b56b7),
+                borderRadius: BorderRadius.circular(10)
+              ),
               child: Column(
                 children: [
-                  Image.asset("${g1.festivalname[index]['image']}",height: 150,fit: BoxFit.fill,),
+                  Image.asset("${g1.festivaldetail[index].image}",height: 150,fit: BoxFit.fill,),
                   const Spacer(),
-                  Text("${g1.festivalname[index]['festival']}",overflow: TextOverflow.ellipsis,style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,),),
+                  Text("${g1.festivaldetail[index].festival}",overflow: TextOverflow.ellipsis,style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,),),
                 ],
               )
             ),

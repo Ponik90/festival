@@ -1,7 +1,4 @@
-import 'package:festival/model/festival_wishes.dart';
 import 'package:flutter/material.dart';
-
-import '../../utilitis/global_details.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -13,12 +10,12 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
-    Map m1 = ModalRoute.of(context)!.settings.arguments as Map;
+    List list = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff6639B8),
         title: Text(
-          "${m1['festival']} ",
+          "${list[0]['festival']} ",
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -31,12 +28,12 @@ class _PostScreenState extends State<PostScreen> {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
-        itemCount: g1.festivaldetail.length,
+        itemCount: list[1].length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              MaptoModel data = g1.festivaldetail[index];
-              Navigator.pushNamed(context, 'edit', arguments: data);
+              Map data = list[1][index];
+              Navigator.pushNamed(context, 'edit', arguments: [data,list[2]]);
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width * 0.90,
@@ -45,10 +42,12 @@ class _PostScreenState extends State<PostScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: Colors.red.shade200,
+                  
                   border: Border.all(
                     color: Colors.redAccent,
                     width: 2,
                   ),
+                  borderRadius: BorderRadius.circular(10),
                   boxShadow: const [
                     BoxShadow(
                       spreadRadius: 2,
@@ -57,7 +56,7 @@ class _PostScreenState extends State<PostScreen> {
                     )
                   ]),
               child: Text(
-                "${g1.festivaldetail[index].wishes}",
+                "${list[1][index]['wishes']}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
