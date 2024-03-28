@@ -33,7 +33,7 @@ class _PostScreenState extends State<PostScreen> {
           return InkWell(
             onTap: () {
               Map data = list[1][index];
-              Navigator.pushNamed(context, 'edit', arguments: [data,list[2]]);
+              Navigator.pushNamed(context, 'edit', arguments: [data, list[2]]);
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width * 0.90,
@@ -41,23 +41,24 @@ class _PostScreenState extends State<PostScreen> {
               margin: const EdgeInsets.all(10),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.red.shade200,
-                  
-                  border: Border.all(
-                    color: Colors.redAccent,
-                    width: 2,
+                color: const Color(0xff7252a4),
+                border: Border.all(
+                  color: const Color(0xff6639B8),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    spreadRadius: 2,
+                    blurRadius: 1,
+                    color: Color(0xff6639B8),
                   ),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 1,
-                      color: Colors.redAccent,
-                    )
-                  ]),
+                ],
+              ),
               child: Text(
                 "${list[1][index]['wishes']}",
                 style: const TextStyle(
+                  color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

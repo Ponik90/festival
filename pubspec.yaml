@@ -96,10 +96,27 @@ flutter:
   fonts:
     - family: edu
       fonts:
-        - asset: assets/fonts/eduregular.ttf
-        - asset: assets/fonts/edubold.ttf
+        - asset: assets/fonts/edu_font/eduregular.ttf
+        - asset: assets/fonts/edu_font/edubold.ttf
           weight: 700
-        - asset: assets/fonts/eduSemiBold.ttf
+        - asset: assets/fonts/edu_font/eduSemiBold.ttf
           style: italic
+    - family: rubik
+      fonts:
+        - asset:  assets/fonts/rubik/RB.ttf
+        - asset:  assets/fonts/rubik/rbold.ttf
+          weight: 300
+        - asset:  assets/fonts/rubik/ritalic.ttf
+          style: italic
+        - asset: assets/fonts/rubik/rregular.ttf
+    - family: play
+      fonts:
+        - asset: assets/fonts/playfair/pregular.ttf
+        - asset: assets/fonts/playfair/pmedium.ttf
+        - asset: assets/fonts/playfair/pitalic.ttf
+          style: italic
+        - asset: assets/fonts/playfair/pbold.ttf
+          weight: 300
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

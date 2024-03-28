@@ -28,11 +28,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
         title: const Text(
           "Enter your detail",
           style: TextStyle(
-            color: Colors.redAccent,
+            color: Colors.white,
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: const Color(0xff6639B8),
         centerTitle: true,
       ),
       body: Form(
@@ -42,30 +43,36 @@ class _PersonalScreenState extends State<PersonalScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                 Stack(
+                Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    path.isEmpty?
-                    const CircleAvatar(
-                      maxRadius: 50,
-                      child: Icon(Icons.perm_identity,size: 50,),
-                    ):
-                    CircleAvatar(
-                      maxRadius: 50,
-                      backgroundImage: FileImage(File(path),),
-                    ),
+                    path.isEmpty
+                        ? const CircleAvatar(
+                            maxRadius: 50,
+                            child: Icon(
+                              Icons.perm_identity,
+                              size: 50,
+                            ),
+                          )
+                        : CircleAvatar(
+                            maxRadius: 50,
+                            backgroundImage: FileImage(
+                              File(path),
+                            ),
+                          ),
                     InkWell(
                       onTap: () async {
                         ImagePicker picker = ImagePicker();
-                        XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        XFile? image =
+                            await picker.pickImage(source: ImageSource.gallery);
                         setState(() {
-                          path=image!.path;
-                          g1.image=image.path;
+                          path = image!.path;
+                          g1.image = image.path;
                         });
                       },
                       child: const CircleAvatar(
                         maxRadius: 15,
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: Color(0xff6639B8),
                         child: Icon(
                           Icons.add,
                           color: Colors.white,
@@ -153,19 +160,22 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ),
                 InkWell(
                   onTap: () {
-
-                    if(formkey.currentState!.validate())
-                      {
-                        g1.name=txtname.text;
-                        g1.phone=txtphone.text;
-                        g1.email=txtemail.text;
-                        formkey.currentState!.save();
-                      }
+                    if (formkey.currentState!.validate()) {
+                      g1.name = txtname.text;
+                      g1.phone = txtphone.text;
+                      g1.email = txtemail.text;
+                      formkey.currentState!.save();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Save"),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     height: 30,
                     width: 80,
-                    color: Colors.blueAccent,
+                    color: const Color(0xff6639B8),
                     alignment: Alignment.center,
                     child: const Text(
                       "SAVE",

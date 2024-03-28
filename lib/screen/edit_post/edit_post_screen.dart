@@ -19,7 +19,9 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   List<Color> changecolor = [Colors.black, Colors.white, ...Colors.primaries];
   List<Color> changebg = [Colors.black, Colors.white, ...Colors.accents];
+  List<String> changefamily = ["edu", "rubik", "play"];
 
+  String family = "";
   String image = "assets/bgimage/holi1.jpg";
   Color textcolor = Colors.black;
   Color bgcolor = Colors.amberAccent;
@@ -99,6 +101,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
             child: Container(
               height: MediaQuery.sizeOf(context).width,
               width: MediaQuery.sizeOf(context).width,
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: bgcolor,
                 border: Border.all(
@@ -119,20 +122,51 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       width: MediaQuery.sizeOf(context).width,
                     ),
                   ),
-
                   SelectableText(
                     "${data[0]['wishes']}",
                     style: TextStyle(
                       color: textcolor,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
+                      fontFamily: family,
                     ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
-                      Text("${g1.name}")
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${g1.name}",
+                            style: TextStyle(
+                              color: textcolor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                "${g1.email}",
+                                style: TextStyle(
+                                  color: textcolor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "${g1.phone}",
+                                style: TextStyle(
+                                  color: textcolor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ],
@@ -175,51 +209,108 @@ class _EditPostScreenState extends State<EditPostScreen> {
             height: 20,
           ),
           //text
-          Visibility(
+          Visibilityx(
             visible: istext,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Change Text Color ",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      itemCount: changecolor.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            setState(
-                              () {
-                                textcolor = changecolor[index];
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Change Text Color ",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemCount: changecolor.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    textcolor = changecolor[index];
+                                  },
+                                );
                               },
+                              child: Container(
+                                width: 50,
+                                margin: const EdgeInsets.only(
+                                  right: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: changecolor[index],
+                                  border: Border.all(
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
                             );
                           },
-                          child: Container(
-                            width: 50,
-                            margin: const EdgeInsets.only(
-                              right: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: changecolor[index],
-                              border: Border.all(
-                                width: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        "Change Font Style",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemCount: changefamily.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    family = changefamily[index];
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: 80,
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.only(
+                                  right: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Hello",
+                                  style: TextStyle(
+                                    fontFamily: changefamily[index],
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -319,7 +410,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       const Text(
                         "Change Image Color ",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(
