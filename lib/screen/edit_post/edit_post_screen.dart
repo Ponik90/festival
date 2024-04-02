@@ -122,18 +122,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       width: MediaQuery.sizeOf(context).width,
                     ),
                   ),
-                  SelectableText(
-                    "${data[0]['wishes']}",
-                    style: TextStyle(
-                      color: textcolor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontFamily: family,
-                    ),
-                  ),
+
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+
+                      SelectableText(
+                        "${data[0]['wishes']}",
+                        style: TextStyle(
+                          color: textcolor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: family,
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -209,7 +211,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
             height: 20,
           ),
           //text
-          Visibilityx(
+          Visibility(
             visible: istext,
             child: Expanded(
               child: SingleChildScrollView(
