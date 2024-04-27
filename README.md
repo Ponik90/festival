@@ -3,7 +3,7 @@ ReadMe File code
 <div align="center">
 
 
-<img src="https://github.com/Ponik90/festival/assets/156168435/df664074-b466-4905-9d34-cc5608d24aa1">
+<img src="https://github.com/Ponik90/festival/assets/156168435/df664074-b466-4905-9d34-cc5608d24aa1" height="200" widht="200">
 
 
 # **Festival Post App**
