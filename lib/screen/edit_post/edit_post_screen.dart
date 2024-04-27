@@ -101,7 +101,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
             child: Container(
               height: MediaQuery.sizeOf(context).width,
               width: MediaQuery.sizeOf(context).width,
-              padding: const EdgeInsets.all(10),
+
               decoration: BoxDecoration(
                 color: bgcolor,
                 border: Border.all(

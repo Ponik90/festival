@@ -170,6 +170,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           content: Text("Save"),
                         ),
                       );
+                      Navigator.pop(context);
                     }
                   },
                   child: Container(
